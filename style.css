@@ -1,0 +1,405 @@
+:root {
+    --bg-color: #0f172a;
+    --text-color: #f8fafc;
+    --card-bg: #1e293b;
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --success: #10b981;
+    --font: 'Outfit', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+#app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    padding-bottom: 120px; /* space for the dock container */
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    color: #94a3b8;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+}
+
+.view {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.view.active {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Upload Styles */
+.upload-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.upload-label {
+    border: 2px dashed #475569;
+    border-radius: 16px;
+    padding: 3rem 1.5rem;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    cursor: pointer;
+    background-color: rgba(30, 41, 59, 0.5);
+    transition: all 0.3s ease;
+}
+
+.upload-label:hover {
+    border-color: var(--primary);
+    background-color: rgba(30, 41, 59, 0.8);
+    transform: translateY(-2px);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.upload-label span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 99px;
+    border: 2px solid transparent;
+    font-family: var(--font);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    align-self: center;
+    white-space: nowrap;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn.primary {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.btn.primary:hover {
+    background-color: var(--primary-hover);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+.btn.secondary {
+    background-color: transparent;
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn.secondary:hover {
+    background-color: rgba(99, 102, 241, 0.1);
+}
+
+.btn.secondary.active {
+    background-color: var(--danger);
+    border-color: var(--danger);
+    color: white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.btn.secondary.active:hover {
+    background-color: var(--danger-hover);
+}
+
+/* Grids */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 2rem;
+    }
+}
+
+/* Cards */
+.card-wrapper {
+    perspective: 1000px;
+    cursor: pointer;
+    aspect-ratio: 3/4;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+.card-wrapper.flipped .card-inner {
+    transform: rotateY(180deg) scale(0.95);
+}
+
+/* On selection view, add hover lift */
+#select-gallery .card-wrapper:hover .card-inner {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--card-bg);
+    border: 2px solid #334155;
+    transition: border-color 0.3s;
+}
+
+.card-wrapper:hover .card-front {
+    border-color: var(--primary);
+}
+
+.card-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.card-back {
+    background: repeating-linear-gradient(
+        45deg,
+        #1e293b,
+        #1e293b 10px,
+        #0f172a 10px,
+        #0f172a 20px
+    );
+    transform: rotateY(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-back::after {
+    content: "X";
+    font-size: 5rem;
+    color: #ef4444;
+    font-weight: 800;
+    opacity: 0.8;
+}
+
+/* Mystery Dock */
+.play-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #334155;
+}
+
+.play-header h2 {
+    margin-bottom: 0;
+}
+
+.mystery-dock {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(99, 102, 241, 0.2);
+    z-index: 100;
+    padding: 0.75rem 0;
+    box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.dock-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dock-text h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+.dock-text span {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+#mystery-person-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--primary);
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    transition: transform 0.3s;
+}
+
+#mystery-person-container:hover {
+    transform: scale(1.1);
+}
+
+#mystery-person-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Modals / Overlays */
+.overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.overlay.hidden {
+    display: none !important;
+}
+
+.modal {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid #334155;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 90%;
+    width: 400px;
+}
+
+.modal h2 {
+    margin-bottom: 0.5rem;
+}
+
+.modal p {
+    margin-bottom: 2rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Utility to show simple images in upload view */
+.simple-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #334155;
+    animation: fadeIn 0.3s ease-out;
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Guess Who</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Setup View -->
+        <section id="setup-view" class="view active">
+            <header>
+                <h1>Custom Guess Who</h1>
+                <p>Upload your friends, family, or favorite characters to start.</p>
+            </header>
+            <div class="upload-container">
+                <label for="image-upload" class="upload-label">
+                    <div class="upload-icon">📁</div>
+                    <span>Click here to select multiple images</span>
+                    <input type="file" id="image-upload" multiple accept="image/*" />
+                </label>
+            </div>
+            <div id="preview-gallery" class="gallery hidden"></div>
+            <button id="btn-next-to-select" class="btn primary hidden">Start Setup</button>
+        </section>
+
+        <!-- Selection View -->
+        <section id="select-view" class="view hidden">
+            <header>
+                <h2>Who are you?</h2>
+                <p>Secretly pick your mystery person. Don't tell your opponent!</p>
+            </header>
+            <div id="select-gallery" class="gallery card-grid"></div>
+        </section>
+
+        <!-- Play View -->
+        <section id="play-view" class="view hidden">
+            <header class="play-header">
+                <h2>Game Board</h2>
+                <button id="btn-guess-mode" class="btn secondary">Guess Mode: OFF</button>
+            </header>
+            <div id="board-gallery" class="gallery card-grid"></div>
+            
+            <div class="mystery-dock">
+                <div class="dock-content">
+                    <div class="dock-text">
+                        <h3>Your Mystery Person</h3>
+                        <span>Keep this secret!</span>
+                    </div>
+                    <div id="mystery-person-container"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Victory/Result Overlay -->
+        <div id="result-overlay" class="overlay hidden">
+            <div class="modal">
+                <h2 id="result-title"></h2>
+                <p id="result-message"></p>
+                <div class="modal-actions">
+                    <button id="btn-continue" class="btn secondary">Keep Playing</button>
+                    <button id="btn-restart" class="btn primary">Restart Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
