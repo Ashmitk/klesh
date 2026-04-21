@@ -1,3 +1,39 @@
+// Auto-discover images by probing sequentially 1.jpg, 2.jpg, etc.
+async function checkImageExists(url) {
+    return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+    });
+}
+
+async function discoverImages() {
+    let index = 1;
+    const discovered = [];
+    while (true) {
+        const jpgUrl = `images/${index}.jpg`;
+        const jpgExists = await checkImageExists(jpgUrl);
+        if (jpgExists) {
+            discovered.push(jpgUrl);
+            index++;
+            continue;
+        }
+
+        const pngUrl = `images/${index}.png`;
+        const pngExists = await checkImageExists(pngUrl);
+        if (pngExists) {
+            discovered.push(pngUrl);
+            index++;
+            continue;
+        }
+        
+        // Neither jpg nor png found, sequence ends
+        break;
+    }
+    return discovered;
+}
+
 // State variables
 let images = [];
 let mysteryPersonIndex = -1;
@@ -10,8 +46,6 @@ const views = {
     play: document.getElementById('play-view')
 };
 
-const uploadInput = document.getElementById('image-upload');
-const previewGallery = document.getElementById('preview-gallery');
 const selectGallery = document.getElementById('select-gallery');
 const boardGallery = document.getElementById('board-gallery');
 const mysteryContainer = document.getElementById('mystery-person-container');
@@ -21,35 +55,6 @@ const resultOverlay = document.getElementById('result-overlay');
 const btnRestart = document.getElementById('btn-restart');
 const btnContinue = document.getElementById('btn-continue');
 
-// File Upload Logic
-uploadInput.addEventListener('change', (e) => {
-    const files = Array.from(e.target.files);
-    
-    if (files.length === 0) return;
-
-    if (images.length + files.length < 2) {
-        alert("Please upload at least 2 images to play.");
-        return;
-    }
-
-    // Process new files
-    files.forEach(file => {
-        const url = URL.createObjectURL(file);
-        images.push(url);
-        
-        // Add to preview visually
-        const img = document.createElement('img');
-        img.src = url;
-        img.classList.add('simple-img');
-        previewGallery.appendChild(img);
-    });
-
-    if (images.length >= 2) {
-        previewGallery.classList.remove('hidden');
-        btnNextToSelect.classList.remove('hidden');
-    }
-});
-
 // Navigation Functions
 function switchView(viewName) {
     Object.values(views).forEach(view => view.classList.remove('active'));
@@ -57,7 +62,22 @@ function switchView(viewName) {
 }
 
 // Start Setup (Move to Select Phase)
-btnNextToSelect.addEventListener('click', () => {
+btnNextToSelect.addEventListener('click', async () => {
+    // Show loading state
+    btnNextToSelect.textContent = "Loading images...";
+    btnNextToSelect.disabled = true;
+
+    // Load sequentially named images
+    images = await discoverImages();
+    
+    btnNextToSelect.textContent = "Start Game";
+    btnNextToSelect.disabled = false;
+    
+    if (images.length < 2) {
+        alert("Could not detect at least 2 images. Please ensure they are placed in the 'images/' folder and named sequentially (1.jpg, 2.jpg...).");
+        return;
+    }
+
     selectGallery.innerHTML = '';
     
     images.forEach((imgSrc, index) => {
@@ -183,10 +203,6 @@ btnRestart.addEventListener('click', () => {
     guessMode = false;
     updateGuessModeUI();
     
-    uploadInput.value = '';
-    previewGallery.innerHTML = '';
-    previewGallery.classList.add('hidden');
-    btnNextToSelect.classList.add('hidden');
     resultOverlay.classList.add('hidden');
     
     switchView('setup');

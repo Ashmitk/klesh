@@ -13,21 +13,20 @@
         <section id="setup-view" class="view active">
             <header>
                 <h1>Custom Guess Who</h1>
-                <p>Upload your friends, family, or favorite characters to start.</p>
+                <p>Play with your custom characters.</p>
             </header>
             <div class="upload-container">
-                <label for="image-upload" class="upload-label">
+                <div class="upload-label" style="cursor: default;">
                     <div class="upload-icon">📁</div>
-                    <span>Click here to select multiple images</span>
-                    <input type="file" id="image-upload" multiple accept="image/*" />
-                </label>
+                    <span>Auto-detecting images from the <code>images/</code> folder!</span>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">Name your files sequentially (e.g. <strong>1.jpg</strong>, <strong>2.jpg</strong>, <strong>3.png</strong>) and drop them into the <code>images/</code> folder. The game will automatically detect them until the sequence breaks.</p>
+                </div>
             </div>
-            <div id="preview-gallery" class="gallery hidden"></div>
-            <button id="btn-next-to-select" class="btn primary hidden">Start Setup</button>
+            <button id="btn-next-to-select" class="btn primary">Start Game</button>
         </section>
 
         <!-- Selection View -->
-        <section id="select-view" class="view hidden">
+        <section id="select-view" class="view">
             <header>
                 <h2>Who are you?</h2>
                 <p>Secretly pick your mystery person. Don't tell your opponent!</p>
@@ -36,7 +35,7 @@
         </section>
 
         <!-- Play View -->
-        <section id="play-view" class="view hidden">
+        <section id="play-view" class="view">
             <header class="play-header">
                 <h2>Game Board</h2>
                 <button id="btn-guess-mode" class="btn secondary">Guess Mode: OFF</button>
